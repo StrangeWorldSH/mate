@@ -1,0 +1,916 @@
+
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exposición de Matemáticas: Conjuntos Numéricos y Plano Cartesiano</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            cyan: '#00f3ff',
+                            purple: '#a855f7',
+                            emerald: '#10b981',
+                            rose: '#f43f5e',
+                            amber: '#f59e0b',
+                            blue: '#3b82f6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .neon-border-cyan {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+            border-color: rgba(0, 243, 255, 0.4);
+        }
+        .neon-border-purple {
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+        .neon-border-emerald {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
+
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/90 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 via-purple-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 font-extrabold text-black font-mono text-xl">
+                    ℝ
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-cyan-400 via-purple-300 to-emerald-400 bg-clip-text text-transparent">Conjuntos Numéricos y Plano Real</h1>
+                    <p class="text-xs text-slate-400 font-mono">Juan, Geovanny & Carlos</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-1 bg-slate-900/90 border border-slate-800 p-1.5 rounded-2xl shadow-inner">
+                <button onclick="switchTab('presentation')" id="nav-presentation" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 bg-cyan-500 text-black shadow-lg shadow-cyan-500/20">📖 Ponencia</button>
+                <button onclick="switchTab('plane')" id="nav-plane" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/60">📐 Plano Cartesiano (X/Y)</button>
+                <button onclick="switchTab('game')" id="nav-game" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/60">🎮 Minijuego</button>
+                <button onclick="switchTab('quiz')" id="nav-quiz" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/60">🧠 Evaluación Quiz</button>
+            </nav>
+
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleAudioEngine()" id="audio-toggle-btn" class="px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition flex items-center space-x-1.5">
+                    <span id="audio-icon">🔊</span> <span id="audio-status-text">Audio: ON</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Bottom Nav -->
+        <div class="flex md:hidden border-t border-slate-800 bg-slate-950 px-2 py-2 justify-around">
+            <button onclick="switchTab('presentation')" id="mob-nav-presentation" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-black">Ponencia</button>
+            <button onclick="switchTab('plane')" id="mob-nav-plane" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400">Plano XY</button>
+            <button onclick="switchTab('game')" id="mob-nav-game" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400">Juego</button>
+            <button onclick="switchTab('quiz')" id="mob-nav-quiz" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400">Quiz</button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- VIEW 1: PRESENTATION SPEECHES -->
+        <div id="view-presentation" class="space-y-8">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950/40 border border-slate-800 p-6 sm:p-10 shadow-2xl">
+                <div class="relative z-10 max-w-3xl">
+                    <span class="inline-block px-3.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono font-semibold tracking-wider uppercase mb-3">Guión Oficial de Exposición</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">De los Contables a la Continuidad del Plano Real</h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Selecciona el tema de cada expositor para revisar la ponencia completa y escuchar la locución en voz sintética.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Speaker Subtabs -->
+            <div class="flex flex-wrap gap-3 border-b border-slate-800 pb-4">
+                <button onclick="showSpeaker('juan')" id="speaker-tab-juan" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all bg-cyan-500/20 border border-cyan-500/50 text-cyan-300">
+                    👤 Juan — Punto 1: Naturales (ℕ) y Enteros (ℤ)
+                </button>
+                <button onclick="showSpeaker('geovanny')" id="speaker-tab-geovanny" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+                    👤 Geovanny — Punto 2: Racionales (ℚ) e Irracionales (𝕀)
+                </button>
+                <button onclick="showSpeaker('carlos')" id="speaker-tab-carlos" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+                    👤 Carlos — Punto 3: Números Reales (ℝ) y Plano Continuo
+                </button>
+            </div>
+
+            <!-- Speaker Content: JUAN -->
+            <div id="speaker-content-juan" class="space-y-6">
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 neon-border-cyan relative">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <span class="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider">Punto 1 • Juan</span>
+                            <h3 class="text-2xl font-extrabold text-white mt-1">Los cimientos numéricos</h3>
+                            <p class="text-xs text-slate-400">Números Naturales (ℕ) y Enteros (ℤ)</p>
+                        </div>
+                        <button onclick="speakText('juan-speech-text')" class="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500 hover:text-black font-semibold text-xs transition flex items-center space-x-2 self-start">
+                            <span>📢</span> <span>Escuchar Voz de Juan</span>
+                        </button>
+                    </div>
+
+                    <blockquote class="text-sm italic text-cyan-200/90 bg-slate-950/70 p-4 rounded-2xl border border-cyan-500/20 mb-6">
+                        "Buenos días, profesor. Para arrancar con la matemática, debemos entender cómo la humanidad empezó a contar y a necesitar más números para representar la realidad."
+                    </blockquote>
+
+                    <div id="juan-speech-text" class="space-y-6 text-slate-300 leading-relaxed text-sm sm:text-base">
+                        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+                            <h4 class="text-lg font-bold text-white mb-2 flex items-center"><span class="w-3 h-3 rounded-full bg-cyan-400 mr-2.5"></span>Los Números Naturales (ℕ)</h4>
+                            <p>Son los primeros que aprendemos de niños. Sirven estrictamente para contar elementos y ordenar. Su símbolo es <strong>ℕ</strong> y comprende los enteros positivos: <span class="font-mono text-cyan-300">1, 2, 3, 4, ...</span> Son básicos para operaciones como la suma y la multiplicación, pero se quedan cortos cuando a una cantidad menor le queremos restar una mayor.</p>
+                        </div>
+
+                        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+                            <h4 class="text-lg font-bold text-white mb-2 flex items-center"><span class="w-3 h-3 rounded-full bg-cyan-400 mr-2.5"></span>Los Números Enteros (ℤ)</h4>
+                            <p>Para solucionar las deudas, las temperaturas bajo cero y las restas más complejas, surgen los enteros. Abarcan los naturales, el cero y sus opuestos negativos: desde <span class="font-mono text-cyan-300">-∞</span> pasando por el <span class="font-mono text-cyan-300">0</span> hasta <span class="font-mono text-cyan-300">+∞</span>. Aquí ya podemos operar con direcciones opuestas y simetría en el eje numérico.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Speaker Content: GEOVANNY -->
+            <div id="speaker-content-geovanny" class="hidden space-y-6">
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 neon-border-purple relative">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <span class="text-xs font-mono text-purple-400 font-bold uppercase tracking-wider">Punto 2 • Geovanny</span>
+                            <h3 class="text-2xl font-extrabold text-white mt-1">Fragmentando la unidad</h3>
+                            <p class="text-xs text-slate-400">Números Racionales (ℚ) e Irracionales (𝕀)</p>
+                        </div>
+                        <button onclick="speakText('geovanny-speech-text')" class="px-4 py-2 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-500 hover:text-black font-semibold text-xs transition flex items-center space-x-2 self-start">
+                            <span>📢</span> <span>Escuchar Voz de Geovanny</span>
+                        </button>
+                    </div>
+
+                    <blockquote class="text-sm italic text-purple-200/90 bg-slate-950/70 p-4 rounded-2xl border border-purple-500/20 mb-6">
+                        "Continuando con la exposición, profe, pasamos al espacio entre los números enteros, donde aparecen las porciones y los valores que no se pueden escribir de forma simple."
+                    </blockquote>
+
+                    <div id="geovanny-speech-text" class="space-y-6 text-slate-300 leading-relaxed text-sm sm:text-base">
+                        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+                            <h4 class="text-lg font-bold text-white mb-2 flex items-center"><span class="w-3 h-3 rounded-full bg-purple-400 mr-2.5"></span>Los Números Racionales (ℚ)</h4>
+                            <p>Son todos aquellos números que se pueden expresar como una fracción entre dos enteros <span class="font-mono text-purple-300">(a/b)</span>, donde el denominador no es cero. En su forma decimal, corresponden a números con decimales finitos o infinitos periódicos que se repiten con un patrón fijo.</p>
+                        </div>
+
+                        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+                            <h4 class="text-lg font-bold text-white mb-2 flex items-center"><span class="w-3 h-3 rounded-full bg-purple-400 mr-2.5"></span>Los Números Irracionales (𝕀)</h4>
+                            <p>Son la contraparte exacta de los racionales. No se pueden expresar como fracción de dos enteros. Su expresión decimal es infinita no periódica. Ejemplos fundamentales son <span class="font-mono text-purple-300">π (3.14159...)</span>, <span class="font-mono text-purple-300">e (2.71828...)</span> o raíces no exactas como <span class="font-mono text-purple-300">√2</span>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Speaker Content: CARLOS -->
+            <div id="speaker-content-carlos" class="hidden space-y-6">
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 neon-border-emerald relative">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <span class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">Punto 3 • Carlos</span>
+                            <h3 class="text-2xl font-extrabold text-white mt-1">La gran unificación</h3>
+                            <p class="text-xs text-slate-400">El Conjunto de los Números Reales (ℝ) y el Plano Continua</p>
+                        </div>
+                        <button onclick="speakText('carlos-speech-text')" class="px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-black font-semibold text-xs transition flex items-center space-x-2 self-start">
+                            <span>📢</span> <span>Escuchar Voz de Carlos</span>
+                        </button>
+                    </div>
+
+                    <blockquote class="text-sm italic text-emerald-200/90 bg-slate-950/70 p-4 rounded-2xl border border-emerald-500/20 mb-6">
+                        "Y para cerrar esta parte, profe, unimos todas estas piezas en un gran sistema que cubre toda la recta y el plano cartesiano de dos dimensiones."
+                    </blockquote>
+
+                    <div id="carlos-speech-text" class="space-y-6 text-slate-300 leading-relaxed text-sm sm:text-base">
+                        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+                            <h4 class="text-lg font-bold text-white mb-2 flex items-center"><span class="w-3 h-3 rounded-full bg-emerald-400 mr-2.5"></span>Los Números Reales (ℝ)</h4>
+                            <p>Constituyen la unión de los números racionales e irracionales <span class="font-mono text-emerald-300">(ℝ = ℚ ∪ 𝕀)</span>. Cualquier número que puedas ubicar en una línea recta continua pertenece a este conjunto.</p>
+                        </div>
+
+                        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+                            <h4 class="text-lg font-bold text-white mb-2 flex items-center"><span class="w-3 h-3 rounded-full bg-emerald-400 mr-2.5"></span>El Plano Cartesiano Bidimensional (ℝ²)</h4>
+                            <p>Al cruzar dos rectas reales perpendiculares obtenemos el plano cartesiano compuesto por cuatro zonas o cuadrantes definidos por los ejes: <strong>Eje X+ (Horizontal Positivo)</strong>, <strong>Eje X- (Horizontal Negativo)</strong>, <strong>Eje Y+ (Vertical Positivo)</strong> y <strong>Eje Y- (Vertical Negativo)</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: CARTESIAN PLANE / CONTINUOUS XY AXES -->
+        <div id="view-plane" class="hidden space-y-6">
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono font-semibold mb-2">Simulador Bidimensional (ℝ²)</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Plano Cartesiano Continuo</h2>
+                        <p class="text-slate-400 text-xs sm:text-sm mt-1">Explora los ejes X+, X-, Y+, Y- y ubica coordenadas reales en cualquiera de los cuatro cuadrantes.</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                        <button onclick="presetPoint(3, 4, 'N / N')" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-cyan-300 hover:bg-slate-800">(3, 4) Naturales</button>
+                        <button onclick="presetPoint(-5, 6, 'Z / N')" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-purple-300 hover:bg-slate-800">(-5, 6) Entero/Nat</button>
+                        <button onclick="presetPoint(-3.5, -4.5, 'Q / Q')" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-emerald-300 hover:bg-slate-800">(-3.5, -4.5) Racionales</button>
+                        <button onclick="presetPoint(3.141, -1.414, 'I / I')" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-amber-300 hover:bg-slate-800">(π, -√2) Irracionales</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <!-- Controls Column -->
+                    <div class="space-y-4">
+                        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                            <h4 class="text-xs font-mono text-cyan-400 font-bold uppercase">Entrada de Coordenadas (X, Y)</h4>
+                            
+                            <div>
+                                <label class="text-xs text-slate-400 flex justify-between font-mono">
+                                    <span>Eje X (X- ↔ X+):</span>
+                                    <span id="label-val-x" class="text-cyan-300 font-bold">2.00</span>
+                                </label>
+                                <input type="range" id="slider-x" min="-10" max="10" step="0.1" value="2" oninput="updatePlaneFromSliders()" class="w-full accent-cyan-400 bg-slate-800 mt-1">
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 flex justify-between font-mono">
+                                    <span>Eje Y (Y- ↔ Y+):</span>
+                                    <span id="label-val-y" class="text-cyan-300 font-bold">3.00</span>
+                                </label>
+                                <input type="range" id="slider-y" min="-10" max="10" step="0.1" value="3" oninput="updatePlaneFromSliders()" class="w-full accent-cyan-400 bg-slate-800 mt-1">
+                            </div>
+
+                            <div class="pt-2 border-t border-slate-800 space-y-2 text-xs font-mono">
+                                <div class="flex justify-between text-slate-300">
+                                    <span>Ubicación:</span>
+                                    <span id="quadrant-info" class="text-cyan-400 font-bold">Cuadrante I (X+, Y+)</span>
+                                </div>
+                                <div class="flex justify-between text-slate-300">
+                                    <span>Tipo en X:</span>
+                                    <span id="type-x-info" class="text-emerald-400">Entero / Racional</span>
+                                </div>
+                                <div class="flex justify-between text-slate-300">
+                                    <span>Tipo en Y:</span>
+                                    <span id="type-y-info" class="text-emerald-400">Entero / Racional</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 text-xs text-slate-400 space-y-2">
+                            <p class="font-bold text-slate-200">Leyenda de Ejes y Cuadrantes:</p>
+                            <p><strong class="text-cyan-400">Cuadrante I:</strong> X+ y Y+ (Derecha, Arriba)</p>
+                            <p><strong class="text-purple-400">Cuadrante II:</strong> X- y Y+ (Izquierda, Arriba)</p>
+                            <p><strong class="text-rose-400">Cuadrante III:</strong> X- y Y- (Izquierda, Abajo)</p>
+                            <p><strong class="text-emerald-400">Cuadrante IV:</strong> X+ y Y- (Derecha, Abajo)</p>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Plane Display -->
+                    <div class="lg:col-span-3 bg-slate-950 rounded-2xl border border-slate-800 relative overflow-hidden flex flex-col items-center justify-center p-2 min-h-[420px]">
+                        <canvas id="planeCanvas" width="700" height="420" class="w-full h-full cursor-crosshair rounded-xl"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: CLASSIFICATION GAME -->
+        <div id="view-game" class="hidden space-y-6">
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl">
+                
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono font-semibold mb-1">Juego Interactivo</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Clasificador de Conjuntos Numéricos</h2>
+                        <p class="text-slate-400 text-xs sm:text-sm">Selecciona la caja del conjunto más específico al que pertenece el número mostrado.</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl text-xs font-mono">
+                            Puntos: <span id="game-score" class="text-cyan-400 font-bold text-base">0</span>
+                        </div>
+                        <button onclick="resetGame()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition">🔄 Reiniciar</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Current Target Number -->
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 flex flex-col items-center justify-center text-center space-y-6">
+                        <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">Número a Clasificar</span>
+                        <div id="current-num-card" class="px-8 py-6 rounded-2xl bg-gradient-to-tr from-cyan-950 via-slate-900 to-purple-950 border-2 border-cyan-400 shadow-xl shadow-cyan-500/10 min-w-[180px]">
+                            <span id="num-display" class="text-4xl font-extrabold font-mono text-cyan-300">√2</span>
+                        </div>
+                        <p id="num-hint" class="text-xs text-slate-400 font-mono">Pista: Expresión decimal infinita no periódica.</p>
+                    </div>
+
+                    <!-- Classification Option Containers -->
+                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button onclick="classifyNumber('N')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-cyan-400 hover:bg-slate-900/80 transition text-left space-y-2 group">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-cyan-400 group-hover:scale-110 transition">Naturales (ℕ)</span>
+                                <span class="text-xs font-mono text-slate-500">1, 2, 3...</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Enteros estrictamente positivos usados para contar elementos discretos.</p>
+                        </button>
+
+                        <button onclick="classifyNumber('Z')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-purple-400 hover:bg-slate-900/80 transition text-left space-y-2 group">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-purple-400 group-hover:scale-110 transition">Enteros (ℤ)</span>
+                                <span class="text-xs font-mono text-slate-500">...-2, -1, 0, 1...</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Incluye los naturales, el cero y sus opuestos negativos.</p>
+                        </button>
+
+                        <button onclick="classifyNumber('Q')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-emerald-400 hover:bg-slate-900/80 transition text-left space-y-2 group">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-emerald-400 group-hover:scale-110 transition">Racionales (ℚ)</span>
+                                <span class="text-xs font-mono text-slate-500">a/b, decimales periódicos</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Números expresables como fracciones a/b o decimales periódicos.</p>
+                        </button>
+
+                        <button onclick="classifyNumber('I')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-400 hover:bg-slate-900/80 transition text-left space-y-2 group">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-amber-400 group-hover:scale-110 transition">Irracionales (𝕀)</span>
+                                <span class="text-xs font-mono text-slate-500">π, e, √2...</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Decimales infinitos aperiódicos no representables como fracción.</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Feedback Box -->
+                <div class="mt-6 p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between font-mono text-xs">
+                    <span id="game-feedback-text" class="text-cyan-400 font-semibold">¡Elige un conjunto para clasificar el número activo!</span>
+                    <span class="text-slate-500">Todos pertenecen a ℝ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4: QUIZ EVALUATION -->
+        <div id="view-quiz" class="hidden space-y-6 max-w-4xl mx-auto">
+            <div class="glass-panel rounded-3xl p-6 sm:p-10 shadow-2xl">
+                
+                <div class="flex items-center justify-between mb-6 pb-6 border-b border-slate-800">
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono font-semibold mb-1">Evaluación Estricta</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Quiz de Validación de Aprendizaje</h2>
+                    </div>
+                    <div class="px-4 py-2 rounded-2xl bg-slate-950 border border-slate-800 text-xs sm:text-sm font-mono font-bold text-cyan-400">
+                        Puntaje: <span id="quiz-score" class="text-emerald-400">0</span> / <span id="quiz-total">6</span>
+                    </div>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-container" class="space-y-6">
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+                        <div id="quiz-progress-bar" class="bg-gradient-to-r from-cyan-400 via-purple-500 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xs font-mono text-slate-400">
+                        <span>Pregunta <span id="q-num">1</span> de <span id="q-total-num">6</span></span>
+                        <span id="q-speaker-tag" class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Juan</span>
+                    </div>
+
+                    <h3 id="q-text" class="text-xl sm:text-2xl font-bold text-white leading-snug">
+                        <!-- Question dynamic load -->
+                    </h3>
+
+                    <div id="q-options-list" class="grid grid-cols-1 gap-3">
+                        <!-- Options dynamic load -->
+                    </div>
+
+                    <div id="q-explanation-box" class="hidden p-4 rounded-2xl border text-sm font-medium transition-all">
+                        <!-- Explanation dynamic load -->
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button id="btn-next-q" onclick="nextQuizQuestion()" class="hidden px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition">
+                            Siguiente Pregunta ➔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Summary -->
+                <div id="quiz-summary" class="hidden text-center py-10 space-y-6">
+                    <div id="summary-icon" class="w-20 h-20 bg-gradient-to-tr from-cyan-500 via-purple-500 to-emerald-400 rounded-3xl mx-auto flex items-center justify-center shadow-xl text-3xl font-bold text-black">
+                        🏆
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-white" id="summary-title">¡Evaluación Finalizada!</h3>
+                    <p id="summary-body" class="text-slate-300 max-w-lg mx-auto text-sm leading-relaxed"></p>
+                    <div class="pt-2">
+                        <button onclick="restartQuiz()" class="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold text-sm shadow-lg transition">
+                            Reintentar Evaluación 🔄
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-auto border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500 font-mono">
+        <p>Exposición de Matemáticas — Juan (Punto 1), Geovanny (Punto 2) y Carlos (Punto 3)</p>
+    </footer>
+
+    <script>
+        // ================= AUDIO SYNTHESIS & VOICE ENGINE =================
+        let audioEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function toggleAudioEngine() {
+            audioEnabled = !audioEnabled;
+            document.getElementById('audio-status-text').innerText = audioEnabled ? "Audio: ON" : "Audio: OFF";
+            document.getElementById('audio-icon').innerText = audioEnabled ? "🔊" : "🔇";
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                }
+            } catch(e) { console.log(e); }
+        }
+
+        function speakText(elementId) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const text = document.getElementById(elementId).innerText;
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-ES';
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // ================= NAVIGATION =================
+        function switchTab(tabId) {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            
+            ['presentation', 'plane', 'game', 'quiz'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/60";
+                if (document.getElementById(`mob-nav-${t}`)) {
+                    document.getElementById(`mob-nav-${t}`).className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400";
+                }
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabId}`).className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 bg-cyan-500 text-black shadow-lg shadow-cyan-500/20";
+            if (document.getElementById(`mob-nav-${tabId}`)) {
+                document.getElementById(`mob-nav-${tabId}`).className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-black";
+            }
+
+            if (tabId === 'plane') {
+                drawPlane();
+            }
+        }
+
+        function showSpeaker(speaker) {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+            ['juan', 'geovanny', 'carlos'].forEach(s => {
+                document.getElementById(`speaker-content-${s}`).classList.add('hidden');
+                document.getElementById(`speaker-tab-${s}`).className = "px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white";
+            });
+
+            document.getElementById(`speaker-content-${speaker}`).classList.remove('hidden');
+            const btn = document.getElementById(`speaker-tab-${speaker}`);
+            if (speaker === 'juan') btn.className = "px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all bg-cyan-500/20 border border-cyan-500/50 text-cyan-300";
+            if (speaker === 'geovanny') btn.className = "px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all bg-purple-500/20 border border-purple-500/50 text-purple-300";
+            if (speaker === 'carlos') btn.className = "px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all bg-emerald-500/20 border border-emerald-500/50 text-emerald-300";
+        }
+
+        // ================= CARTESIAN PLANE SIMULATOR (X+, X-, Y+, Y-) =================
+        let pointX = 2.0;
+        let pointY = 3.0;
+
+        const planeCanvas = document.getElementById('planeCanvas');
+        const planeCtx = planeCanvas.getContext('2d');
+
+        function updatePlaneFromSliders() {
+            pointX = parseFloat(document.getElementById('slider-x').value);
+            pointY = parseFloat(document.getElementById('slider-y').value);
+            document.getElementById('label-val-x').innerText = pointX.toFixed(2);
+            document.getElementById('label-val-y').innerText = pointY.toFixed(2);
+            drawPlane();
+        }
+
+        function presetPoint(x, y, desc) {
+            pointX = x;
+            pointY = y;
+            document.getElementById('slider-x').value = x;
+            document.getElementById('slider-y').value = y;
+            document.getElementById('label-val-x').innerText = pointX.toFixed(2);
+            document.getElementById('label-val-y').innerText = pointY.toFixed(2);
+            drawPlane();
+        }
+
+        function drawPlane() {
+            const w = planeCanvas.width;
+            const h = planeCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const scale = (w / 2 - 40) / 10; // Scale 10 units per axis half
+
+            planeCtx.clearRect(0, 0, w, h);
+
+            // Grid Lines
+            planeCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            planeCtx.lineWidth = 1;
+            for (let i = -10; i <= 10; i++) {
+                if (i === 0) continue;
+                // Vertical
+                planeCtx.beginPath();
+                planeCtx.moveTo(cx + i * scale, 0);
+                planeCtx.lineTo(cx + i * scale, h);
+                planeCtx.stroke();
+                // Horizontal
+                planeCtx.beginPath();
+                planeCtx.moveTo(0, cy - i * scale);
+                planeCtx.lineTo(w, cy - i * scale);
+                planeCtx.stroke();
+            }
+
+            // Main Axes (X+, X-, Y+, Y-)
+            planeCtx.strokeStyle = '#00f3ff';
+            planeCtx.lineWidth = 2;
+            
+            // X Axis
+            planeCtx.beginPath();
+            planeCtx.moveTo(20, cy);
+            planeCtx.lineTo(w - 20, cy);
+            planeCtx.stroke();
+
+            // Y Axis
+            planeCtx.beginPath();
+            planeCtx.moveTo(cx, 20);
+            planeCtx.lineTo(cx, h - 20);
+            planeCtx.stroke();
+
+            // Axis Labels
+            planeCtx.fillStyle = '#00f3ff';
+            planeCtx.font = '12px Fira Code';
+            planeCtx.textAlign = 'center';
+
+            planeCtx.fillText("X+", w - 15, cy + 4);
+            planeCtx.fillText("X-", 15, cy + 4);
+            planeCtx.fillText("Y+", cx, 15);
+            planeCtx.fillText("Y-", cx, h - 8);
+
+            // Axis Ticks and Numbers
+            for (let i = -10; i <= 10; i += 2) {
+                if (i === 0) continue;
+                // X Ticks
+                const px = cx + i * scale;
+                planeCtx.beginPath();
+                planeCtx.moveTo(px, cy - 4);
+                planeCtx.lineTo(px, cy + 4);
+                planeCtx.stroke();
+                planeCtx.fillText(i.toString(), px, cy + 18);
+
+                // Y Ticks
+                const py = cy - i * scale;
+                planeCtx.beginPath();
+                planeCtx.moveTo(cx - 4, py);
+                planeCtx.lineTo(cx + 4, py);
+                planeCtx.stroke();
+                planeCtx.fillText(i.toString(), cx - 18, py + 4);
+            }
+
+            // Target Point Mapping
+            const targetPx = cx + pointX * scale;
+            const targetPy = cy - pointY * scale;
+
+            // Projection Lines
+            planeCtx.setLineDash([4, 4]);
+            planeCtx.strokeStyle = 'rgba(0, 243, 255, 0.5)';
+            planeCtx.beginPath();
+            planeCtx.moveTo(targetPx, cy);
+            planeCtx.lineTo(targetPx, targetPy);
+            planeCtx.lineTo(cx, targetPy);
+            planeCtx.stroke();
+            planeCtx.setLineDash([]);
+
+            // Draw Coordinate Point
+            planeCtx.fillStyle = '#a855f7';
+            planeCtx.beginPath();
+            planeCtx.arc(targetPx, targetPy, 7, 0, Math.PI * 2);
+            planeCtx.fill();
+            planeCtx.strokeStyle = '#ffffff';
+            planeCtx.lineWidth = 2;
+            planeCtx.stroke();
+
+            // Coordinate Text Label
+            planeCtx.fillStyle = '#ffffff';
+            planeCtx.font = 'bold 12px Fira Code';
+            planeCtx.fillText(`P(${pointX.toFixed(2)}, ${pointY.toFixed(2)})`, targetPx + 10, targetPy - 10);
+
+            // Quadrant & Set Classification Info
+            const quadInfo = document.getElementById('quadrant-info');
+            if (pointX > 0 && pointY > 0) quadInfo.innerText = "Cuadrante I (X+, Y+)";
+            else if (pointX < 0 && pointY > 0) quadInfo.innerText = "Cuadrante II (X-, Y+)";
+            else if (pointX < 0 && pointY < 0) quadInfo.innerText = "Cuadrante III (X-, Y-)";
+            else if (pointX > 0 && pointY < 0) quadInfo.innerText = "Cuadrante IV (X+, Y-)";
+            else quadInfo.innerText = "Sobre el Eje de Origen";
+
+            document.getElementById('type-x-info').innerText = Number.isInteger(pointX) ? (pointX > 0 ? "Natural / Entero" : "Entero Negativo") : "Racional / Decimal";
+            document.getElementById('type-y-info').innerText = Number.isInteger(pointY) ? (pointY > 0 ? "Natural / Entero" : "Entero Negativo") : "Racional / Decimal";
+        }
+
+        // Canvas Drag Interaction
+        let isDraggingPlane = false;
+        planeCanvas.addEventListener('mousedown', (e) => { isDraggingPlane = true; updatePlaneFromMouse(e); });
+        planeCanvas.addEventListener('mousemove', (e) => { if (isDraggingPlane) updatePlaneFromMouse(e); });
+        window.addEventListener('mouseup', () => { isDraggingPlane = false; });
+
+        function updatePlaneFromMouse(e) {
+            const rect = planeCanvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            const cx = planeCanvas.width / 2;
+            const cy = planeCanvas.height / 2;
+            const scale = (planeCanvas.width / 2 - 40) / 10;
+
+            let x = (mouseX - cx) / scale;
+            let y = (cy - mouseY) / scale;
+
+            x = Math.max(-10, Math.min(10, x));
+            y = Math.max(-10, Math.min(10, y));
+
+            presetPoint(x, y, '');
+        }
+
+        // ================= CLASSIFICATION GAME =================
+        const gameItems = [
+            { display: "7", hint: "Entero positivo usado para contar.", set: "N" },
+            { display: "-5", hint: "Entero negativo opuesto a los naturales.", set: "Z" },
+            { display: "3/4", hint: "Fracción simple entre dos enteros.", set: "Q" },
+            { display: "√2", hint: "Raíz no exacta con decimales aperiódicos.", set: "I" },
+            { display: "0.333...", hint: "Decimal infinito periódico.", set: "Q" },
+            { display: "π", hint: "Razón de circunferencia a diámetro.", set: "I" },
+            { display: "0", hint: "Origen de simetría en Z.", set: "Z" },
+            { display: "e", hint: "Base de los logaritmos naturales.", set: "I" },
+            { display: "-12/3", hint: "Equivale exactamente a -4.", set: "Z" },
+            { display: "15", hint: "Número natural clásico.", set: "N" }
+        ];
+
+        let gameIdx = 0;
+        let gameScore = 0;
+
+        function classifyNumber(chosenSet) {
+            const item = gameItems[gameIdx];
+            const feedback = document.getElementById('game-feedback-text');
+
+            if (item.set === chosenSet) {
+                gameScore += 10;
+                playSound('correct');
+                feedback.className = "text-emerald-400 font-bold";
+                feedback.innerText = `¡CORRECTO! ${item.display} pertenece fundamentalmente al conjunto ${getSetName(chosenSet)}.`;
+            } else {
+                playSound('wrong');
+                feedback.className = "text-rose-400 font-bold";
+                feedback.innerText = `INCORRECTO. ${item.display} pertenece al conjunto de los ${getSetName(item.set)}.`;
+            }
+
+            document.getElementById('game-score').innerText = gameScore;
+            gameIdx = (gameIdx + 1) % gameItems.length;
+            
+            document.getElementById('num-display').innerText = gameItems[gameIdx].display;
+            document.getElementById('num-hint').innerText = "Pista: " + gameItems[gameIdx].hint;
+        }
+
+        function getSetName(code) {
+            const m = { 'N': 'Naturales (ℕ)', 'Z': 'Enteros (ℤ)', 'Q': 'Racionales (ℚ)', 'I': 'Irracionales (𝕀)' };
+            return m[code] || 'Reales (ℝ)';
+        }
+
+        function resetGame() {
+            gameScore = 0;
+            gameIdx = 0;
+            document.getElementById('game-score').innerText = '0';
+            document.getElementById('num-display').innerText = gameItems[0].display;
+            document.getElementById('num-hint').innerText = "Pista: " + gameItems[0].hint;
+            document.getElementById('game-feedback-text').innerText = "¡Elige un conjunto para clasificar el número activo!";
+        }
+
+        // ================= QUIZ MODULE (STRICT VALIDATION) =================
+        const quizQuestions = [
+            {
+                speaker: "Juan (Punto 1)",
+                question: "¿Cuál es la deficiencia principal del conjunto de los Números Naturales (ℕ)?",
+                options: [
+                    "No se pueden realizar sumas ni multiplicaciones.",
+                    "No permiten resolver restas donde se sustrae una cantidad mayor a una menor.",
+                    "No contienen números impares.",
+                    "Tienen un número finito de elementos."
+                ],
+                correct: 1,
+                explanation: "En ℕ solo hay valores enteros positivos. La resta 3 - 8 no tiene solución en ℕ, requiriendo el conjunto ℤ."
+            },
+            {
+                speaker: "Juan (Punto 1)",
+                question: "¿Qué elementos conforman el conjunto de los Números Enteros (ℤ)?",
+                options: [
+                    "Los enteros positivos (naturales), el cero y sus opuestos negativos.",
+                    "Exclusivamente las fracciones a/b con denominador no nulo.",
+                    "Únicamente los números comprendidos entre 0 y 100.",
+                    "Los decimales infinitos aperiódicos."
+                ],
+                correct: 0,
+                explanation: "ℤ extiende a ℕ incluyendo los números negativos y el cero."
+            },
+            {
+                speaker: "Geovanny (Punto 2)",
+                question: "¿Cuál es la característica decimal distintiva de los Números Racionales (ℚ)?",
+                options: [
+                    "Sus decimales son siempre infinitos aperiódicos.",
+                    "Tienen decimales finitos o infinitos periódicos con patrón repetitivo.",
+                    "No se pueden expresar mediante ningún tipo de fracción.",
+                    "Son siempre números mayores que 10."
+                ],
+                correct: 1,
+                explanation: "Todo racional a/b genera una expansión decimal finita (ej: 1/4 = 0.25) o periódica (ej: 1/3 = 0.333...)."
+            },
+            {
+                speaker: "Geovanny (Punto 2)",
+                question: "¿Por qué el número π (Pi) es clasificado como Irracional (𝕀)?",
+                options: [
+                    "Porque equivale a la fracción exacta 22/7.",
+                    "Porque su desarrollo decimal es infinito y no tiene un patrón periódico.",
+                    "Porque es un entero negativo.",
+                    "Porque se encuentra fuera del plano real."
+                ],
+                correct: 1,
+                explanation: "π no se puede expresar como fracción de dos enteros, poseyendo infinitos decimales aperiódicos."
+            },
+            {
+                speaker: "Carlos (Punto 3)",
+                question: "¿Cómo se define el conjunto de los Números Reales (ℝ)?",
+                options: [
+                    "Como la resta de los naturales a los racionales.",
+                    "Como la unión de los conjuntos Racionales e Irracionales (ℝ = ℚ ∪ 𝕀).",
+                    "Solamente como la suma de enteros negativos.",
+                    "Como los números que no se pueden representar geométricamente."
+                ],
+                correct: 1,
+                explanation: "Los Números Reales abarcan todos los valores representables de forma continua en la recta y plano numérico."
+            },
+            {
+                speaker: "Carlos (Punto 3)",
+                question: "En el Plano Cartesiano bidimensional (ℝ²), ¿qué signos tienen las coordenadas en el Cuadrante III?",
+                options: [
+                    "X+ y Y+",
+                    "X- y Y+",
+                    "X- y Y-",
+                    "X+ y Y-"
+                ],
+                correct: 2,
+                explanation: "El Cuadrante III comprende la región inferior izquierda donde la abscisa X es negativa (X-) y la ordenada Y es negativa (Y-)."
+            }
+        ];
+
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizAnswered = false;
+
+        function loadQuizState() {
+            quizAnswered = false;
+            const q = quizQuestions[quizIndex];
+
+            document.getElementById('q-num').innerText = quizIndex + 1;
+            document.getElementById('q-total-num').innerText = quizQuestions.length;
+            document.getElementById('quiz-total').innerText = quizQuestions.length;
+            document.getElementById('quiz-score').innerText = quizScore;
+            document.getElementById('q-speaker-tag').innerText = q.speaker;
+            document.getElementById('q-text').innerText = q.question;
+
+            const progressPct = ((quizIndex) / quizQuestions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${progressPct}%`;
+
+            const list = document.getElementById('q-options-list');
+            list.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-cyan-500/50 text-slate-200 text-sm font-medium transition flex items-center space-x-3";
+                btn.innerHTML = `<span class="w-7 h-7 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-xs font-mono font-bold text-cyan-400 shrink-0">${String.fromCharCode(65 + idx)}</span><span>${optText}</span>`;
+                btn.onclick = () => answerQuiz(idx, btn);
+                list.appendChild(btn);
+            });
+
+            document.getElementById('q-explanation-box').className = "hidden p-4 rounded-2xl border text-sm font-medium transition-all";
+            document.getElementById('btn-next-q').classList.add('hidden');
+        }
+
+        function answerQuiz(chosenIdx, btnElement) {
+            if (quizAnswered) return;
+            quizAnswered = true;
+
+            const q = quizQuestions[quizIndex];
+            const options = document.getElementById('q-options-list').children;
+            const expBox = document.getElementById('q-explanation-box');
+
+            if (chosenIdx === q.correct) {
+                quizScore++;
+                document.getElementById('quiz-score').innerText = quizScore;
+                playSound('correct');
+
+                btnElement.className = "w-full text-left p-4 rounded-2xl bg-emerald-950/80 border-2 border-emerald-400 text-emerald-100 text-sm font-medium flex items-center space-x-3 shadow-lg shadow-emerald-500/10";
+                expBox.className = "p-4 rounded-2xl border border-emerald-500/40 bg-emerald-950/40 text-emerald-300 text-sm";
+                expBox.innerHTML = `<span class="font-bold">¡CORRECTO! 🎉</span> ${q.explanation}`;
+            } else {
+                playSound('wrong');
+                btnElement.className = "w-full text-left p-4 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-rose-100 text-sm font-medium flex items-center space-x-3";
+                options[q.correct].className = "w-full text-left p-4 rounded-2xl bg-emerald-950/80 border-2 border-emerald-400 text-emerald-100 text-sm font-medium flex items-center space-x-3";
+
+                expBox.className = "p-4 rounded-2xl border border-rose-500/40 bg-rose-950/40 text-rose-300 text-sm";
+                expBox.innerHTML = `<span class="font-bold">INCORRECTO ❌</span> La opción correcta era la <strong>${String.fromCharCode(65 + q.correct)}</strong>. ${q.explanation}`;
+            }
+
+            expBox.classList.remove('hidden');
+            document.getElementById('btn-next-q').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            quizIndex++;
+            if (quizIndex < quizQuestions.length) {
+                loadQuizState();
+            } else {
+                showQuizSummary();
+            }
+        }
+
+        function showQuizSummary() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            const summary = document.getElementById('quiz-summary');
+            summary.classList.remove('hidden');
+
+            const pct = (quizScore / quizQuestions.length) * 100;
+            document.getElementById('summary-body').innerHTML = `
+                Has acertado <strong>${quizScore}</strong> de <strong>${quizQuestions.length}</strong> preguntas (${pct.toFixed(0)}%).<br><br>
+                ${pct >= 80 ? '🌟 ¡Excelente nivel de dominio! Comprendes los conjuntos numéricos y la continuidad del plano real.' : '👍 Buen intento. Revisa la ponencia y vuelve a poner a prueba tus conocimientos.'}
+            `;
+        }
+
+        function restartQuiz() {
+            quizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-summary').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuizState();
+        }
+
+        window.onload = function() {
+            loadQuizState();
+            drawPlane();
+        };
+    </script>
+</body>
+</html>
